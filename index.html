@@ -25,6 +25,12 @@
     color: rgba(255, 255, 255, 0.75);
   }
 </style>
+  <style>
+  /* Smooth scrolling and offset for sticky header */
+  html { scroll-behavior: smooth; }
+  /* Make anchors stop *below* the sticky header (adjust if your header changes height) */
+  section[id], header[id] { scroll-margin-top: 84px; }
+</style>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
