@@ -35,6 +35,24 @@
     .point{display:flex;gap:10px;align-items:flex-start}
     footer{opacity:.7;font-size:13px;margin:36px 0;text-align:center}
     @media (max-width:900px){ .hero{grid-template-columns:1fr} h2{font-size:32px} }
+
+    /* --- Demo Section layout --- */
+    .demo-grid{
+      display:grid; grid-template-columns:1fr 440px; gap:28px; align-items:start;
+      margin:28px 0;
+    }
+    .sticky{
+      position: sticky; top: 20px;  /* sticks inside this section only */
+    }
+    .iframe-wrap{
+      width:100%; max-width:420px; height:560px; border:none; border-radius:16px;
+      overflow:hidden; box-shadow:0 20px 48px rgba(0,0,0,.35); background:transparent;
+    }
+    @media (max-width:980px){
+      .demo-grid{ grid-template-columns:1fr; }
+      .sticky{ position:static; } /* on small screens it just flows normally */
+      .iframe-wrap{ max-width:100%; height:70vh; }
+    }
   </style>
 </head>
 <body>
@@ -49,7 +67,7 @@
       <nav>
         <a class="btn" href="#how-it-works">How it works</a>
         <a class="btn" href="#pricing">Pricing</a>
-        <a class="btn primary" href="https://calendly.com/truedeskai/demo" target="_blank" rel="noopener">Book a Demo</a>
+        <a class="btn primary" href="#receptionist-demo">Try the Live Demo</a>
       </nav>
     </header>
 
@@ -63,22 +81,65 @@
           <div class="point">✅ <div><b>Drop-in Setup</b><br>Works with your current number and tools.</div></div>
         </div>
         <div style="margin-top:18px; display:flex; gap:12px; flex-wrap:wrap">
-          <a class="btn primary" href="https://calendly.com/truedeskai/demo" target="_blank" rel="noopener">Get a 5-min Demo</a>
-          <a class="btn" href="#live-demo">Try the live receptionist</a>
+          <a class="btn primary" href="https://calendly.com/truedeskai/demo" target="_blank" rel="noopener">Book a 5-min Demo</a>
+          <a class="btn" href="#receptionist-demo">Jump to Live Receptionist</a>
         </div>
-        <p class="sub" style="margin-top:10px">Tap the “Talk” panel at the bottom-right to try it now.</p>
       </div>
 
-      <div id="live-demo" class="card" style="min-height:220px">
-        <h3 style="margin:0 0 8px">Live receptionist (browser demo)</h3>
-        <p class="sub" style="margin-top:0">Allow mic and say: “I need AC repair tomorrow.” It will collect details and offer a time or a booking link.</p>
+      <div class="card" style="min-height:220px">
+        <h3 style="margin:0 0 8px">What you’ll see</h3>
+        <p class="sub" style="margin-top:0">Scroll to the demo below, allow mic, and say: “I need AC repair tomorrow.” The receptionist will capture details and offer times or a booking link.</p>
       </div>
     </section>
 
-    <section id="how-it-works" class="card">
+    <!-- Long content above/below so the page has room, but widget stays put inside this section -->
+    <section id="receptionist-demo" class="card">
+      <h3 style="margin:0 0 10px">Live Receptionist</h3>
+      <div class="demo-grid">
+        <div>
+          <p class="sub">Talk to the AI receptionist. While you browse this section, the panel on the right stays in place so it never covers other content.</p>
+          <ul style="margin:0 0 16px 18px; color:#9aa3b2">
+            <li>Say: “Book AC maintenance tomorrow.”</li>
+            <li>It will collect name/phone/address.</li>
+            <li>It offers time slots or drops a booking link.</li>
+            <li>You (and the customer) get confirmations.</li>
+          </ul>
+
+          <!-- filler content so you can scroll inside the section while the widget stays sticky -->
+          <div class="card" style="margin-top:12px">
+            <h4 style="margin:0 0 8px">Why it converts</h4>
+            <p class="sub">Instant pickup, no hold music, and real scheduling. Owners stop losing jobs to voicemail.</p>
+          </div>
+          <div class="card" style="margin-top:12px">
+            <h4 style="margin:0 0 8px">Integrations</h4>
+            <p class="sub">Calendar links today; booking platform/API connections as you scale.</p>
+          </div>
+          <div class="card" style="margin-top:12px">
+            <h4 style="margin:0 0 8px">Next steps</h4>
+            <p class="sub">Ready for a tailored setup? Book below and we’ll wire it to your workflow.</p>
+          </div>
+        </div>
+
+        <div class="sticky">
+          <div class="iframe-wrap">
+            <iframe
+              src="https://widget.synthflow.ai/widget/v2/11c1a35a-4b21-4de7-8362-4775ad9b348d/1760486164246x405749797457673000"
+              title="TrueDeskAI Receptionist"
+              allow="microphone; autoplay; clipboard-read; clipboard-write"
+              style="width:100%;height:100%;border:0;display:block"
+              loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <a class="btn primary" href="https://calendly.com/truedeskai/demo" target="_blank" rel="noopener">Book a Demo</a>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="card" style="margin-top:18px">
       <h3 style="margin:0 0 10px">How it works</h3>
       <ol style="margin:0 0 0 18px; color:#9aa3b2">
-        <li>Connect to your phone line or embed the widget.</li>
+        <li>Embed the widget or connect your phone line.</li>
         <li>Receptionist answers, qualifies, and books into your calendar.</li>
         <li>You get instant text/email alerts. Customers get confirmations.</li>
       </ol>
@@ -95,38 +156,8 @@
     </footer>
   </div>
 
-  <!-- Floating Synthflow Widget (fixed, clickable) -->
-  <iframe
-    src="https://widget.synthflow.ai/widget/v2/11c1a35a-4b21-4de7-8362-4775ad9b348d/1760486164246x405749797457673000"
-    title="TrueDeskAI Receptionist"
-    allow="microphone; autoplay; clipboard-read; clipboard-write"
-    style="
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 400px;
-      max-width: 92vw;
-      height: 560px;
-      border: none;
-      background: transparent;
-      border-radius: 16px;
-      box-shadow: 0 20px 48px rgba(0,0,0,.35);
-      z-index: 2147483647;
-      pointer-events: auto;
-    "
-    loading="lazy">
-  </iframe>
-
   <script>
-    // year in footer
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
-
-  <noscript>
-    <div style="position:fixed;bottom:10px;left:10px;background:#111;color:#fff;padding:8px 10px;border-radius:8px">
-      JavaScript is disabled. Book a demo:
-      <a href="https://calendly.com/truedeskai/demo" style="color:#7cd4ff">calendly.com/truedeskai/demo</a>
-    </div>
-  </noscript>
 </body>
 </html>
