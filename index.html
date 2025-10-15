@@ -4,79 +4,45 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TrueDeskAI — AI Receptionist for HVAC</title>
-  <meta name="description" content="AI receptionist that answers every call, books jobs, and texts confirmations for HVAC companies." />
+  <meta name="description" content="AI receptionist that answers every call, qualifies leads, and books jobs for HVAC companies." />
   <link rel="preconnect" href="https://widget.synthflow.ai" crossorigin>
   <style>
     :root{
-      --bg:#0b1020;         /* dark slate */
-      --card:#121937;       /* panel */
-      --text:#e6e9f5;       /* primary text */
-      --muted:#9aa3b2;      /* secondary */
-      --brand:#4ea8ff;      /* accent */
-      --brand-2:#7cd4ff;    /* accent gradient */
-      --ok:#10b981;
+      --bg:#0b1020; --card:#121937; --text:#e6e9f5; --muted:#9aa3b2;
+      --brand:#4ea8ff; --brand2:#7cd4ff;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+      font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif}
     a{color:var(--brand);text-decoration:none}
     .wrap{max-width:1100px;margin:0 auto;padding:24px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:6px 0}
     .logo{display:flex;align-items:center;gap:10px}
-    .logo-mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--brand),var(--brand-2));display:grid;place-items:center;box-shadow:0 6px 20px rgba(78,168,255,.35)}
-    .logo-mark svg{width:22px;height:22px;fill:#0b1020}
+    .logo-mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--brand),var(--brand2));
+      display:grid;place-items:center;box-shadow:0 6px 20px rgba(78,168,255,.35)}
+    .logo-mark svg{width:20px;height:20px;fill:#0b1020}
     .logo h1{font-size:18px;margin:0}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:transparent;color:var(--text);cursor:pointer}
-    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#0b1020;border:none;font-weight:700;box-shadow:0 8px 28px rgba(78,168,255,.3)}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border:1px solid rgba(255,255,255,.1);
+      border-radius:12px;background:transparent;color:var(--text);cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#0b1020;border:none;font-weight:700;
+      box-shadow:0 8px 28px rgba(78,168,255,.28)}
     .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;margin:26px 0}
-    .card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:22px;
+      box-shadow:0 10px 30px rgba(0,0,0,.25)}
     h2{font-size:40px;line-height:1.1;margin:0 0 12px}
     .sub{color:var(--muted);margin:6px 0 18px}
     .points{display:grid;gap:10px;margin-top:8px}
     .point{display:flex;gap:10px;align-items:flex-start}
-    .point b{color:#bfe8ff}
     footer{opacity:.7;font-size:13px;margin:36px 0;text-align:center}
-    /* Widget (floating bubble + panel) */
-    #tda-fab{position:fixed;right:20px;bottom:20px;width:56px;height:56px;border-radius:50%;
-      border:none;box-shadow:0 12px 32px rgba(0,0,0,.35);cursor:pointer;z-index:99998;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#0b1020;font-weight:800}
-    #tda-panel{position:fixed;right:20px;bottom:86px;width:380px;height:560px;border:none;border-radius:16px;overflow:hidden;
-      box-shadow:0 20px 48px rgba(0,0,0,.45);z-index:99999;display:none;background:transparent}
-    #tda-fab:active{transform:translateY(1px)}
-    @media (max-width:900px){ .hero{grid-template-columns:1fr} }
-    @media (max-width:480px){
-      #tda-panel{width:100%;height:70vh;right:0;left:0;bottom:0;border-radius:12px}
-      h2{font-size:30px}
-    }
+    @media (max-width:900px){ .hero{grid-template-columns:1fr} h2{font-size:32px} }
   </style>
 </head>
-  <!-- TrueDeskAI — Synthflow widget (always visible) -->
-<iframe
-  id="synthflow-widget"
-  src="https://widget.synthflow.ai/widget/v2/8f3cce6f-52c8-4644-a574-fc58fb546838/1759966532691x448795421202970560"
-  allow="microphone; autoplay; clipboard-read; clipboard-write"
-  style="
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 400px;
-    max-width: 92vw;
-    height: 560px;
-    border: none;
-    background: transparent;
-    border-radius: 16px;
-    box-shadow: 0 20px 48px rgba(0,0,0,.35);
-    z-index: 2147483647;
-  "
-  loading="lazy">
-</iframe>
 <body>
   <div class="wrap">
     <header>
       <div class="logo">
         <div class="logo-mark" aria-hidden="true">
-          <!-- simple T icon -->
-          <svg viewBox="0 0 24 24" role="img" aria-label="T">
-            <path d="M5 5h14v3h-5v11h-4V8H5z"/>
-          </svg>
+          <svg viewBox="0 0 24 24" role="img" aria-label="T"><path d="M5 5h14v3h-5v11h-4V8H5z"/></svg>
         </div>
         <h1>TrueDeskAI</h1>
       </div>
@@ -94,30 +60,25 @@
         <div class="points">
           <div class="point">✅ <div><b>Answer & Route</b><br>Greets callers instantly and captures name, phone, and job details.</div></div>
           <div class="point">✅ <div><b>Real Booking</b><br>Offers time slots and sends confirmations to techs & customers.</div></div>
-          <div class="point">✅ <div><b>Inbox Safe</b><br>Works with your number; keep your tools as they are.</div></div>
+          <div class="point">✅ <div><b>Drop-in Setup</b><br>Works with your current number and tools.</div></div>
         </div>
         <div style="margin-top:18px; display:flex; gap:12px; flex-wrap:wrap">
           <a class="btn primary" href="https://calendly.com/truedeskai/demo" target="_blank" rel="noopener">Get a 5-min Demo</a>
           <a class="btn" href="#live-demo">Try the live receptionist</a>
         </div>
-        <p style="color:var(--muted);font-size:13px;margin-top:10px">P.S. Tap the “Talk” button bottom-right to try the live receptionist.</p>
+        <p class="sub" style="margin-top:10px">Tap the “Talk” panel at the bottom-right to try it now.</p>
       </div>
 
       <div id="live-demo" class="card" style="min-height:220px">
         <h3 style="margin:0 0 8px">Live receptionist (browser demo)</h3>
-        <p class="sub" style="margin-top:0">Click “Talk” bottom-right, allow microphone, and say “I need AC repair tomorrow.”</p>
-        <ul style="margin:0 0 0 18px; padding:0; color:var(--muted)">
-          <li>It will collect your details</li>
-          <li>Offer time slots</li>
-          <li>Send a confirmation link</li>
-        </ul>
+        <p class="sub" style="margin-top:0">Allow mic and say: “I need AC repair tomorrow.” It will collect details and offer a time or a booking link.</p>
       </div>
     </section>
 
     <section id="how-it-works" class="card">
       <h3 style="margin:0 0 10px">How it works</h3>
-      <ol style="margin:0 0 0 18px; color:var(--muted)">
-        <li>We connect to your phone line or embed this widget.</li>
+      <ol style="margin:0 0 0 18px; color:#9aa3b2">
+        <li>Connect to your phone line or embed the widget.</li>
         <li>Receptionist answers, qualifies, and books into your calendar.</li>
         <li>You get instant text/email alerts. Customers get confirmations.</li>
       </ol>
@@ -134,34 +95,36 @@
     </footer>
   </div>
 
-  <!-- Floating Widget (Synthflow) -->
-  <iframe id="tda-panel"
-    src="https://widget.synthflow.ai/widget/v2/8f3cce6f-52c8-4644-a574-fc58fb546838/1759966532691x448795421202970560"
-    allow="microphone; clipboard-read; clipboard-write"
-    loading="lazy"></iframe>
-
-  <button id="tda-fab" aria-label="Open TrueDeskAI receptionist">Talk</button>
+  <!-- Floating Synthflow Widget (fixed, clickable) -->
+  <iframe
+    src="https://widget.synthflow.ai/widget/v2/11c1a35a-4b21-4de7-8362-4775ad9b348d/1760486164246x405749797457673000"
+    title="TrueDeskAI Receptionist"
+    allow="microphone; autoplay; clipboard-read; clipboard-write"
+    style="
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 400px;
+      max-width: 92vw;
+      height: 560px;
+      border: none;
+      background: transparent;
+      border-radius: 16px;
+      box-shadow: 0 20px 48px rgba(0,0,0,.35);
+      z-index: 2147483647;
+      pointer-events: auto;
+    "
+    loading="lazy">
+  </iframe>
 
   <script>
-    // Year in footer
+    // year in footer
     document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Floating widget toggle
-    (function(){
-      const fab = document.getElementById('tda-fab');
-      const panel = document.getElementById('tda-panel');
-      let open = false;
-      fab.addEventListener('click', ()=>{
-        open = !open;
-        panel.style.display = open ? 'block' : 'none';
-        fab.textContent = open ? 'Close' : 'Talk';
-      });
-    })();
   </script>
 
   <noscript>
     <div style="position:fixed;bottom:10px;left:10px;background:#111;color:#fff;padding:8px 10px;border-radius:8px">
-      JavaScript is disabled. Book a demo here:
+      JavaScript is disabled. Book a demo:
       <a href="https://calendly.com/truedeskai/demo" style="color:#7cd4ff">calendly.com/truedeskai/demo</a>
     </div>
   </noscript>
