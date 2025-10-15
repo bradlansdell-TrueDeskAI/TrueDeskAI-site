@@ -36,21 +36,14 @@
     footer{opacity:.7;font-size:13px;margin:36px 0;text-align:center}
     @media (max-width:900px){ .hero{grid-template-columns:1fr} h2{font-size:32px} }
 
-    /* --- Demo Section layout --- */
-    .demo-grid{
-      display:grid; grid-template-columns:1fr 440px; gap:28px; align-items:start;
-      margin:28px 0;
-    }
-    .sticky{
-      position: sticky; top: 20px;  /* sticks inside this section only */
-    }
-    .iframe-wrap{
-      width:100%; max-width:420px; height:560px; border:none; border-radius:16px;
-      overflow:hidden; box-shadow:0 20px 48px rgba(0,0,0,.35); background:transparent;
-    }
+    /* Demo section */
+    .demo-grid{ display:grid; grid-template-columns:1fr 440px; gap:28px; align-items:start; margin:28px 0; }
+    .sticky{ position: sticky; top: 20px; } /* sticks inside this section only */
+    .iframe-wrap{ width:100%; max-width:420px; height:560px; border:none; border-radius:16px; overflow:hidden;
+      box-shadow:0 20px 48px rgba(0,0,0,.35); background:transparent; }
     @media (max-width:980px){
       .demo-grid{ grid-template-columns:1fr; }
-      .sticky{ position:static; } /* on small screens it just flows normally */
+      .sticky{ position:static; } /* mobile: natural flow */
       .iframe-wrap{ max-width:100%; height:70vh; }
     }
   </style>
@@ -67,7 +60,7 @@
       <nav>
         <a class="btn" href="#how-it-works">How it works</a>
         <a class="btn" href="#pricing">Pricing</a>
-        <a class="btn primary" href="#receptionist-demo">Try the Live Demo</a>
+        <a class="btn primary" href="#book-demo">Book a Demo</a>
       </nav>
     </header>
 
@@ -81,18 +74,18 @@
           <div class="point">✅ <div><b>Drop-in Setup</b><br>Works with your current number and tools.</div></div>
         </div>
         <div style="margin-top:18px; display:flex; gap:12px; flex-wrap:wrap">
-          <a class="btn primary" href="https://calendly.com/truedeskai/demo" target="_blank" rel="noopener">Book a 5-min Demo</a>
+          <a class="btn primary" href="#book-demo">Book a 5-min Demo</a>
           <a class="btn" href="#receptionist-demo">Jump to Live Receptionist</a>
         </div>
       </div>
 
       <div class="card" style="min-height:220px">
         <h3 style="margin:0 0 8px">What you’ll see</h3>
-        <p class="sub" style="margin-top:0">Scroll to the demo below, allow mic, and say: “I need AC repair tomorrow.” The receptionist will capture details and offer times or a booking link.</p>
+        <p class="sub" style="margin-top:0">Scroll to the demo below, allow mic, and say: “I need AC repair tomorrow.” The receptionist captures details and offers time slots or a booking link.</p>
       </div>
     </section>
 
-    <!-- Long content above/below so the page has room, but widget stays put inside this section -->
+    <!-- Live receptionist (sticky inside this section) -->
     <section id="receptionist-demo" class="card">
       <h3 style="margin:0 0 10px">Live Receptionist</h3>
       <div class="demo-grid">
@@ -100,26 +93,10 @@
           <p class="sub">Talk to the AI receptionist. While you browse this section, the panel on the right stays in place so it never covers other content.</p>
           <ul style="margin:0 0 16px 18px; color:#9aa3b2">
             <li>Say: “Book AC maintenance tomorrow.”</li>
-            <li>It will collect name/phone/address.</li>
-            <li>It offers time slots or drops a booking link.</li>
-            <li>You (and the customer) get confirmations.</li>
+            <li>It collects name/phone/address.</li>
+            <li>It offers time slots or drops your booking form.</li>
           </ul>
-
-          <!-- filler content so you can scroll inside the section while the widget stays sticky -->
-          <div class="card" style="margin-top:12px">
-            <h4 style="margin:0 0 8px">Why it converts</h4>
-            <p class="sub">Instant pickup, no hold music, and real scheduling. Owners stop losing jobs to voicemail.</p>
-          </div>
-          <div class="card" style="margin-top:12px">
-            <h4 style="margin:0 0 8px">Integrations</h4>
-            <p class="sub">Calendar links today; booking platform/API connections as you scale.</p>
-          </div>
-          <div class="card" style="margin-top:12px">
-            <h4 style="margin:0 0 8px">Next steps</h4>
-            <p class="sub">Ready for a tailored setup? Book below and we’ll wire it to your workflow.</p>
-          </div>
         </div>
-
         <div class="sticky">
           <div class="iframe-wrap">
             <iframe
@@ -131,9 +108,16 @@
           </div>
         </div>
       </div>
-      <div style="margin-top:16px">
-        <a class="btn primary" href="https://calendly.com/truedeskai/demo" target="_blank" rel="noopener">Book a Demo</a>
-      </div>
+    </section>
+
+    <!-- Airtable booking form (anchors all Book buttons here) -->
+    <section id="book-demo" class="card" style="margin-top:18px">
+      <h3 style="margin:0 0 10px">Book a Demo</h3>
+      <p class="sub" style="margin-top:0">Pick a time that works. You’ll get instant confirmation and reminders.</p>
+      <iframe id="airtableForm" class="airtable-embed"
+        src="https://airtable.com/embed/shryu1Q1G5WXfGEaB?backgroundColor=teal"
+        frameborder="0" width="100%" height="820"
+        style="background:transparent;border:1px solid rgba(255,255,255,.08);border-radius:12px"></iframe>
     </section>
 
     <section id="how-it-works" class="card" style="margin-top:18px">
@@ -148,7 +132,7 @@
     <section id="pricing" class="card" style="margin-top:18px">
       <h3 style="margin:0 0 10px">Simple pricing</h3>
       <p class="sub" style="margin-top:0">Starts at <b>$299/mo</b> + setup. Ask about our 14-day demo.</p>
-      <a class="btn primary" href="https://calendly.com/truedeskai/demo" target="_blank" rel="noopener">Book a Demo</a>
+      <a class="btn primary" href="#book-demo">Book a Demo</a>
     </section>
 
     <footer>
@@ -157,7 +141,39 @@
   </div>
 
   <script>
+    // Year in footer
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Prefill Airtable form from URL params (name, email, company, and UTMs)
+    (function(){
+      const params = new URLSearchParams(window.location.search);
+      if (!params.toString()) return;
+      const map = {
+        name: 'prefill_Name',
+        email: 'prefill_Email',
+        company: 'prefill_Company',
+        phone: 'prefill_Phone',
+        utm_source: 'prefill_utm_source',
+        utm_medium: 'prefill_utm_medium',
+        utm_campaign: 'prefill_utm_campaign',
+        utm_term: 'prefill_utm_term',
+        utm_content: 'prefill_utm_content'
+      };
+      const iframe = document.getElementById('airtableForm');
+      if (!iframe) return;
+      const url = new URL(iframe.src);
+      Object.keys(map).forEach(k=>{
+        const v = params.get(k);
+        if (v) url.searchParams.set(map[k], v);
+      });
+      iframe.src = url.toString();
+    })();
   </script>
+
+  <noscript>
+    <div style="position:fixed;bottom:10px;left:10px;background:#111;color:#fff;padding:8px 10px;border-radius:8px">
+      JavaScript is disabled. Email <b>hello@truedeskai.com</b> to book your demo.
+    </div>
+  </noscript>
 </body>
 </html>
