@@ -194,16 +194,26 @@
     </section>
 
     <!-- INTAKE FORM (Airtable embed) -->
-    <section id="intake" class="section">
-      <h2>Quick Intake</h2>
-      <p class="sub">Prefer typing? Use the form below. We’ll confirm by email and text.</p>
-      <div style="border-radius:14px;overflow:hidden;border:1px solid var(--line)">
-        <iframe
-          title="Book a Demo — Airtable"
-          src="https://airtable.com/embed/shryu1Q1G5WXfGEaB?backgroundColor=teal"
-          width="100%" height="740" frameborder="0" style="background:transparent;display:block"></iframe>
-      </div>
-    </section>
+          <section id="intake" class="section">
+  <h2>Quick Intake</h2>
+  <p class="sub">
+    Prefer typing? Use the form below and we’ll confirm by email and text. If you came from an ad, your details will pre-fill automatically.
+  </p>
+
+  <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08)">
+    <!-- We set the src via JS so we can pass UTM/prefill params -->
+    <iframe
+      id="intake-frame"
+      title="TrueDeskAI Intake"
+      src="about:blank"
+      width="100%"
+      height="740"
+      frameborder="0"
+      style="background:transparent;display:block"
+      allowtransparency="true">
+    </iframe>
+  </div>
+</section>
 
     <!-- PRICING -->
     <section id="pricing" class="section">
