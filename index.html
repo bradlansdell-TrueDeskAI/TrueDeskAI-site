@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TrueDeskAI — AI Receptionist for HVAC</title>
   <meta name="description" content="AI receptionist that answers every call, qualifies leads, and books jobs for HVAC companies." />
-  <link rel="preconnect" href="https://widget.synthflow.ai" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <!-- Vapi widget library -->
+  <script src="https://unpkg.com/@vapi-ai/client-sdk-react/dist/embed/widget.umd.js" async></script>
   <style>
     :root{ --bg:#0b1020; --card:#121937; --text:#e6e9f5; --muted:#9aa3b2; --brand:#4ea8ff; --brand2:#7cd4ff; }
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Inter,Roboto,sans-serif}
     a{color:var(--brand);text-decoration:none}
     .wrap{max-width:1100px;margin:0 auto;padding:24px}
     header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:6px 0}
@@ -27,11 +29,18 @@
     footer{opacity:.7;font-size:13px;margin:36px 0;text-align:center}
     @media (max-width:900px){ .hero{grid-template-columns:1fr} h2{font-size:32px} }
 
-    /* Demo section */
-    .demo-grid{ display:grid; grid-template-columns:1fr 440px; gap:28px; align-items:start; margin:28px 0; }
-    .sticky{ position: sticky; top: 20px; }
-    .iframe-wrap{ width:100%; max-width:420px; height:560px; border:none; border-radius:16px; overflow:hidden; box-shadow:0 20px 48px rgba(0,0,0,.35); background:transparent; }
-    @media (max-width:980px){ .demo-grid{ grid-template-columns:1fr; } .sticky{ position:static; } .iframe-wrap{ max-width:100%; height:70vh; } }
+    /* --- Compact demo preview (non-floating) --- */
+    .demo-grid{ display:grid; grid-template-columns:1fr 220px; gap:20px; align-items:start; margin:22px 0; }
+    .sticky{ position: sticky; top: 16px; }
+    .iframe-wrap{ width:120px; height:160px; border:none; border-radius:12px; overflow:hidden;
+      box-shadow:0 14px 30px rgba(0,0,0,.35); background:transparent; margin-left:auto; }
+    .preview-note{ font-size:12px; color:#9aa3b2; margin-top:6px; text-align:right }
+    @media (max-width:980px){
+      .demo-grid{ grid-template-columns:1fr; }
+      .sticky{ position:static; }
+      .iframe-wrap{ width:100%; max-width:260px; height:260px; margin:0; }
+      .preview-note{ text-align:left }
+    }
 
     /* Floating "Book Demo" tab */
     #demo-tab{
@@ -42,17 +51,13 @@
     }
     #demo-tab span{ transform:rotate(180deg); display:inline-block; }
 
-    /* Modal */
-    #demo-modal{ position:fixed; inset:0; background:rgba(4,6,14,.65); display:none; align-items:center; justify-content:center; z-index:2147483647; }
-    #demo-dialog{
-      width:min(900px,96vw); height:min(90vh,860px); background:var(--card);
-      border:1px solid rgba(255,255,255,.08); border-radius:18px; box-shadow:0 30px 80px rgba(0,0,0,.5); overflow:hidden; position:relative;
-    }
-    #demo-close{
-      position:absolute; top:10px; right:10px; background:rgba(255,255,255,.1); border:none; color:#fff;
-      border-radius:10px; padding:8px 10px; cursor:pointer; font-weight:700;
-    }
-    #demo-frame{ width:100%; height:100%; border:0; display:block; background:transparent; }
+    /* Modals (Airtable + full Vapi) */
+    .modal{ position:fixed; inset:0; background:rgba(4,6,14,.65); display:none; align-items:center; justify-content:center; z-index:2147483647; }
+    .dialog{ width:min(900px,96vw); height:min(90vh,860px); background:#121937;
+      border:1px solid rgba(255,255,255,.08); border-radius:18px; box-shadow:0 30px 80px rgba(0,0,0,.5); overflow:hidden; position:relative; }
+    .closebtn{ position:absolute; top:10px; right:10px; background:rgba(255,255,255,.1); border:none; color:#fff;
+      border-radius:10px; padding:8px 10px; cursor:pointer; font-weight:700; }
+    iframe.modalframe{ width:100%; height:100%; border:0; display:block; background:transparent; }
   </style>
 </head>
 <body>
@@ -74,7 +79,7 @@
     <section class="hero">
       <div class="card">
         <h2>Never miss an HVAC call again.</h2>
-        <p class="sub">Your AI receptionist answers 24/7, qualifies the job, and books it directly into your schedule—no app, no training.</p>
+        <p class="sub">Your AI receptionist answers 24/7, qualifies the job, and books it into your schedule—no app, no training.</p>
         <div class="points">
           <div>✅ <b>Answer & Route</b> — captures name, phone, and job details.</div>
           <div>✅ <b>Real Booking</b> — offers time slots, sends confirmations.</div>
@@ -83,69 +88,13 @@
       </div>
       <div class="card" style="min-height:220px">
         <h3 style="margin:0 0 8px">What you’ll see</h3>
-        <p class="sub" style="margin-top:0">Scroll to the live demo below, allow mic, and say: “I need AC repair tomorrow.”</p>
+        <p class="sub" style="margin-top:0">Scroll to the live demo below (tiny preview). Click “Open full demo” for the full experience.</p>
       </div>
     </section>
 
-    <!-- Live receptionist (sticky inside this section) -->
+    <!-- Live receptionist (tiny sticky preview) -->
     <section id="receptionist-demo" class="card">
       <h3 style="margin:0 0 10px">Live Receptionist</h3>
       <div class="demo-grid">
         <div>
-          <p class="sub">While you browse this section, the panel on the right stays in place so it never covers other content.</p>
-          <ul style="margin:0 0 16px 18px; color:#9aa3b2">
-            <li>Say: “Book AC maintenance tomorrow.”</li>
-            <li>It collects details and offers time slots.</li>
-            <li>We’ll follow up with confirmations.</li>
-          </ul>
-        </div>
-        <div class="sticky">
-          <div class="iframe-wrap">
-            <iframe
-              src="https://widget.synthflow.ai/widget/v2/11c1a35a-4b21-4de7-8362-4775ad9b348d/1760486164246x405749797457673000"
-              title="TrueDeskAI Receptionist"
-              allow="microphone; autoplay; clipboard-read; clipboard-write"
-              style="width:100%;height:100%;border:0;display:block"
-              loading="lazy"></iframe>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="how-it-works" class="card" style="margin-top:18px">
-      <h3 style="margin:0 0 10px">How it works</h3>
-      <ol style="margin:0 0 0 18px; color:#9aa3b2">
-        <li>Embed the widget or connect your phone line.</li>
-        <li>Receptionist answers, qualifies, and books into your calendar.</li>
-        <li>You get instant alerts; customers get confirmations.</li>
-      </ol>
-    </section>
-
-    <section id="pricing" class="card" style="margin-top:18px">
-      <h3 style="margin:0 0 10px">Simple pricing</h3>
-      <p class="sub" style="margin-top:0">Starts at <b>$299/mo</b> + setup. Ask about our 14-day demo.</p>
-      <button class="btn primary" id="open-demo">Book a Demo</button>
-    </section>
-
-    <footer>© <span id="year"></span> TrueDeskAI — AI-powered business automation for trades</footer>
-  </div>
-
-  <!-- Floating vertical tab -->
-  <button id="demo-tab" aria-label="Book a Demo"><span>Book Demo</span></button>
-
-  <!-- Modal -->
-  <div id="demo-modal" role="dialog" aria-modal="true" aria-labelledby="demo-title">
-    <div id="demo-dialog">
-      <button id="demo-close" aria-label="Close">Close ✕</button>
-      <iframe id="demo-frame"
-        src="about:blank"
-        title="Book a Demo"
-        loading="lazy"></iframe>
-    </div>
-  </div>
-
-  <script>
-    // Year
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Open/close modal + load Airtable form with prefill f
+         
