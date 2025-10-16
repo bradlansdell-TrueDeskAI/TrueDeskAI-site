@@ -1,357 +1,431 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TrueDeskAI — AI Receptionist for HVAC</title>
-  <meta name="description" content="AI receptionist that answers every call, qualifies leads, and books jobs for HVAC companies." />
-  <link rel="preconnect" href="https://unpkg.com" crossorigin>
-  <!-- Vapi widget library -->
-  <script src="https://unpkg.com/@vapi-ai/client-sdk-react/dist/embed/widget.umd.js" async></script>
+  <title>TrueDeskAI — Your business. Answered.</title>
+  <meta name="description" content="TrueDeskAI is your 24/7 AI receptionist, dispatcher, and assistant — capturing every call, booking more jobs, and giving your business calm, control, and consistent growth." />
+  <meta name="theme-color" content="#0b0f14" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="TrueDeskAI — Your business. Answered." />
+  <meta property="og:description" content="Never miss a call again. TrueDeskAI books jobs, dispatches intelligently, and protects your profits around the clock." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.truedeskai.com/" />
+  <meta property="og:image" content="https://www.truedeskai.com/og-image.jpg" />
+
+  <!-- Fonts (optional, safe defaults used if blocked) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#0b1020; --panel:#0F1630; --card:#111936; --line:rgba(255,255,255,.08);
-      --text:#E6E9F5; --muted:#9AA3B2; --brand:#4EA8FF; --brand2:#7CD4FF; --good:#22c55e;
+      --bg:#0b0f14;
+      --card:#0f151d;
+      --muted:#9fb2c7;
+      --text:#e7eef7;
+      --accent:#60d1ff; /* ice blue */
+      --accent-2:#b7e7ff; /* light edge */
+      --ok:#62f3b0;
+      --warn:#ffd166;
+      --danger:#ff7e7e;
+      --ring: 0 0 0 3px rgba(96,209,255,.25);
+      --radius:14px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --grad: linear-gradient(135deg, #5cc8ff 0%, #8be0ff 35%, #c8f1ff 100%);
+      --grad-dark: radial-gradient(1200px 600px at 80% -10%, rgba(96,209,255,.18) 0%, rgba(96,209,255,0) 60%),
+                   radial-gradient(900px 500px at 10% 120%, rgba(183,231,255,.14) 0%, rgba(183,231,255,0) 60%);
     }
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
-      font:16px/1.55 system-ui,-apple-system,Segoe UI,Inter,Roboto,sans-serif}
-    a{color:var(--brand);text-decoration:none}
-    .wrap{max-width:1200px;margin:0 auto;padding:22px}
-    header{display:flex;align-items:center;justify-content:space-between;padding:8px 0}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
-      background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 8px 24px rgba(78,168,255,.3)}
-    .logo svg{width:22px;height:22px;fill:#071327}
-    .brand b{font-size:19px;letter-spacing:.3px}
-    nav{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--line);
-      border-radius:12px;background:transparent;color:var(--text);cursor:pointer}
-    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));border:none;color:#071327;font-weight:750}
-    .btn.ghost{opacity:.8}
-    .section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin-top:18px;
-      box-shadow:0 14px 34px rgba(0,0,0,.32)}
-    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:26px;align-items:center}
-    h1{font-size:42px;line-height:1.08;margin:0 0 10px}
-    h2{margin:0 0 8px;font-size:28px}
-    p.sub{color:var(--muted);margin:4px 0 14px}
-    ul.points{margin:8px 0 0 18px;color:var(--muted)}
-    footer{opacity:.7;font-size:13px;margin:28px 0;text-align:center}
-
-    /* --- Demo block with tiny, non-floating preview --- */
-    .demo-grid{display:grid;grid-template-columns:1fr 240px;gap:20px;align-items:start}
-    .preview-wrap{width:120px;height:160px;border-radius:12px;overflow:hidden;margin-left:auto;background:transparent;
-      border:1px solid var(--line);box-shadow:0 12px 28px rgba(0,0,0,.35)}
-    .preview-note{font-size:12px;color:var(--muted);text-align:right;margin-top:6px}
-    .sticky{position:sticky;top:16px}
-    @media (max-width:980px){
-      .hero{grid-template-columns:1fr}
-      .demo-grid{grid-template-columns:1fr}
-      .sticky{position:static}
-      .preview-wrap{width:100%;max-width:260px;height:260px;margin:0}
-      .preview-note{text-align:left}
+    html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;letter-spacing:.1px}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .shell{max-width:1200px;margin:0 auto;padding:0 20px}
+    header{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter:saturate(1.2) blur(8px);
+      background:rgba(11,15,20,.72);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0;}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:18px;letter-spacing:.3px}
+    .brand svg{width:30px;height:30px}
+    .nav-links{display:flex;gap:22px;align-items:center}
+    .nav-links a{color:var(--muted);font-weight:600}
+    .nav-cta{display:flex;gap:10px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      border:1px solid rgba(255,255,255,.12);padding:10px 16px;border-radius:12px;
+      background:transparent;color:var(--text);font-weight:700;cursor:pointer;
+      transition:.2s transform, .2s background, .2s border;
+    }
+    .btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.25)}
+    .btn.primary{
+      border:none;background:var(--grad);color:#051018;box-shadow:var(--shadow);text-shadow:0 1px 0 rgba(255,255,255,.3);
+    }
+    .btn.primary:hover{filter:saturate(1.1) brightness(1.03)}
+    .mobile-toggle{display:none}
+    @media (max-width: 980px){
+      .nav-links{display:none}
+      .mobile-toggle{display:inline-flex}
     }
 
-    /* Feature cards */
-    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .feat{background:var(--panel);border:1px solid var(--line);padding:16px;border-radius:14px}
-    .feat h3{margin:0 0 6px;font-size:18px}
-
-    /* Pricing */
-    .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .plan{background:var(--panel);border:1px solid var(--line);padding:18px;border-radius:16px}
-    .plan h3{margin:0 0 6px}
-    .price{font-size:28px;font-weight:800;margin:6px 0 8px}
-    .muted{color:var(--muted)}
-
-    /* FAQ */
-    details{background:var(--panel);border:1px solid var(--line);padding:14px;border-radius:12px}
-    details+details{margin-top:10px}
-    summary{cursor:pointer;font-weight:700}
-
-    /* Floating “Book Demo” tab */
-    #demo-tab{
-      position:fixed;right:0;top:40%;transform:translateY(-50%);
-      background:linear-gradient(135deg,var(--brand),var(--brand2));color:#071327;
-      padding:12px 14px;border-radius:12px 0 0 12px;font-weight:800;letter-spacing:.2px;
-      box-shadow:0 12px 28px rgba(0,0,0,.35);cursor:pointer;z-index:2147483000;
-      writing-mode:vertical-rl;text-orientation:mixed
+    .hero{
+      position:relative;
+      padding:72px 0 32px;
+      background:var(--grad-dark);
+      overflow:hidden;
     }
-    #demo-tab span{display:inline-block;transform:rotate(180deg)}
+    .hero-grid{
+      display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:stretch;
+    }
+    @media (max-width: 980px){.hero-grid{grid-template-columns:1fr}}
+    .h1{font-size:48px;line-height:1.06;margin:6px 0 14px;font-weight:800}
+    .h1 .stroke{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .sub{color:var(--muted);font-size:18px;line-height:1.5}
+    .hero-card{
+      border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+      border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);height:100%;
+    }
+    .badge{
+      display:inline-flex;gap:8px;align-items:center;
+      border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);border-radius:999px;
+      padding:8px 12px;color:var(--accent-2);font-weight:700;font-size:13px;margin-bottom:14px;
+    }
+    .pill{display:inline-flex;padding:6px 10px;border-radius:999px;background:rgba(98,243,176,.1);color:var(--ok);font-weight:700;font-size:12px}
 
-    /* Modals (Airtable + Full Voice) */
-    .modal{position:fixed;inset:0;background:rgba(5,8,18,.65);display:none;align-items:center;justify-content:center;z-index:2147483647}
-    .dialog{width:min(980px,96vw);height:min(90vh,880px);background:#101633;border:1px solid var(--line);
-      border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.55);overflow:hidden;position:relative}
-    .closebtn{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.1);border:none;color:#fff;
-      border-radius:10px;padding:8px 10px;cursor:pointer;font-weight:750}
-    iframe.modalframe{width:100%;height:100%;border:0;display:block;background:transparent}
+    .section{padding:56px 0}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    @media (max-width: 980px){.grid-3{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+    .card h3{margin:0 0 8px}
+    .tiny{font-size:13px;color:var(--muted);line-height:1.5}
+    .kicker{color:var(--accent-2);text-transform:uppercase;letter-spacing:.16em;font-weight:800;font-size:12px;margin-bottom:6px}
+
+    .panel{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    @media (max-width: 980px){.panel{grid-template-columns:1fr}}
+    .embed{
+      border:1px dashed rgba(96,209,255,.35);
+      background:rgba(96,209,255,.04);
+      border-radius:var(--radius);padding:12px;height:560px;overflow:hidden;position:relative;
+    }
+    .embed > iframe{width:100%;height:100%;border:0}
+    .embed .hint{position:absolute;bottom:10px;left:12px;color:var(--muted);font-size:12px}
+
+    .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    @media (max-width: 980px){.pricing{grid-template-columns:1fr}}
+    .price .tag{font-size:14px;color:var(--muted);margin:6px 0 14px}
+    .money{font-size:36px;font-weight:800}
+    .features{display:grid;gap:8px;margin:12px 0 14px}
+    .feat{display:flex;gap:8px;align-items:flex-start;font-size:14px;color:var(--text)}
+    .feat i{width:18px;height:18px;display:inline-block;border-radius:4px;background:rgba(98,243,176,.18);border:1px solid rgba(98,243,176,.45)}
+
+    .faq-item{border:1px solid rgba(255,255,255,.06);background:var(--card);border-radius:12px;padding:14px}
+    .faq-q{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:700}
+    .faq-a{display:none;margin-top:8px;color:var(--muted);line-height:1.6}
+    .faq-item.open .faq-a{display:block}
+
+    footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.06);color:var(--muted);font-size:14px}
+    .foot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"TrueDeskAI",
+    "applicationCategory":"BusinessApplication",
+    "operatingSystem":"Web",
+    "description":"24/7 AI receptionist, dispatcher, and assistant for service businesses. Captures calls, books jobs, and safeguards revenue.",
+    "url":"https://www.truedeskai.com",
+    "brand":{"@type":"Brand","name":"TrueDeskAI"},
+    "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}
+  }
+  </script>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true">
-          <svg viewBox="0 0 24 24" role="img" aria-label="T"><path d="M5 5h14v3h-5v11h-4V8H5z"/></svg>
-        </div>
-        <b>TrueDeskAI</b>
-      </div>
-      <nav>
-        <a class="btn ghost" href="#features">Features</a>
-        <a class="btn ghost" href="#receptionist-demo">Demo</a>
-        <a class="btn ghost" href="#intake">Intake</a>
-        <a class="btn ghost" href="#pricing">Pricing</a>
-        <a class="btn ghost" href="#faq">FAQ</a>
-        <a class="btn primary" href="#receptionist-demo">Try Live</a>
+
+  <!-- Header -->
+  <header>
+    <div class="shell nav">
+      <a class="brand" href="#top" aria-label="TrueDeskAI Home">
+        <!-- Minimal TD mark -->
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#5cc8ff"/>
+              <stop offset="100%" stop-color="#c8f1ff"/>
+            </linearGradient>
+          </defs>
+          <rect x="6" y="6" width="52" height="52" rx="14" fill="url(#g1)" opacity=".25" />
+          <path d="M16 24h20a2 2 0 1 1 0 4H34v20a2 2 0 1 1-4 0V28H16a2 2 0 1 1 0-4Zm30 0a2 2 0 0 1 2 2v22a2 2 0 1 1-4 0V26a2 2 0 0 1 2-2Z" fill="url(#g1)"/>
+        </svg>
+        TrueDeskAI
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#how">How it works</a>
+        <a href="#benefits">Benefits</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="#intake">Get Started</a>
       </nav>
-    </header>
 
-    <!-- HERO -->
-    <section class="section hero" id="home">
+      <div class="nav-cta">
+        <a class="btn" href="#widget">Live Demo</a>
+        <a class="btn primary" href="#intake">Start Free Trial</a>
+        <button class="btn mobile-toggle" aria-controls="mobile-menu" aria-expanded="false">Menu</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <nav id="mobile-menu" class="shell" style="display:none;padding:8px 0;">
+    <div class="card" style="padding:10px">
+      <a href="#how">How it works</a> •
+      <a href="#benefits">Benefits</a> •
+      <a href="#pricing">Pricing</a> •
+      <a href="#faq">FAQ</a> •
+      <a href="#intake"><strong>Get Started</strong></a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="top">
+    <div class="shell hero-grid">
       <div>
-        <h1>Never miss an HVAC call again.</h1>
-        <p class="sub">Your AI receptionist answers 24/7, qualifies the job, and books it directly into your schedule—no new app, no training. Full Dispatching servicies coming soon! </p>
-        <div>
-          <button class="btn primary" onclick="document.getElementById('receptionist-demo').scrollIntoView({behavior:'smooth'})">Try the live demo</button>
-          <button id="open-demo" class="btn" style="margin-left:8px">Book a demo</button>
+        <div class="badge">
+          <span class="pill">24/7</span> Your business. Answered.
         </div>
-        <ul class="points">
-          <li>Instant pickup → fewer voicemails, more booked jobs</li>
-          <li>Collects name, phone, address, problem → offers time slots and books into your calendar</li>
-          <li>Emails confirmations and pushes to your CRM</li>
+        <h1 class="h1">
+          Never miss a call again.<br/>
+          <span class="stroke">Book more jobs. Breathe easier.</span>
+        </h1>
+        <p class="sub">
+          TrueDeskAI is your AI receptionist, dispatcher, and assistant — capturing every call,
+          booking jobs on the spot, and giving you back control, calm, and profit.
+        </p>
+        <div style="display:flex;gap:10px;margin-top:16px">
+          <a class="btn primary" href="#intake" aria-label="Start free trial">Start Free Trial</a>
+          <a class="btn" href="#widget" aria-label="Watch live demo">See Live Demo</a>
+        </div>
+        <p class="tiny" style="margin-top:10px">No credit card for the trial. Cancel anytime. Real results or walk away.</p>
+      </div>
+
+      <!-- Live widget / demo card -->
+      <div class="hero-card">
+        <div class="kicker">Live Demo</div>
+        <div class="embed" id="widget">
+          <!-- 🔁 REPLACE the src with your current Synthflow widget URL if different -->
+          <iframe id="audio_iframe" src="https://widget.synthflow.ai/widget/v2/8f3cce6f-52c8-4644-a574-fc58fb546838/1759966532691x448795421202970560" allow="microphone"></iframe>
+          <div class="hint">If you don’t see the widget, your browser may be blocking third-party cookies or mic permissions.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits -->
+  <section class="section shell" id="benefits">
+    <div class="kicker">Why TrueDeskAI</div>
+    <h2 class="h1" style="font-size:32px;margin-bottom:6px">We don’t just answer calls — we protect your potential.</h2>
+    <p class="sub" style="margin-bottom:18px">More bookings. Fewer gaps. Calm days that stack into real growth.</p>
+
+    <div class="grid-3">
+      <div class="card">
+        <h3>Capture & Convert</h3>
+        <p class="tiny">Answer instantly, qualify fast, and book jobs on the spot — no voicemail, no drift, no drop-offs.</p>
+      </div>
+      <div class="card">
+        <h3>Dispatch with Confidence</h3>
+        <p class="tiny">Offer real times, respect availability, and notify the right tech. Precision that feels effortless.</p>
+      </div>
+      <div class="card">
+        <h3>Peace of Mind 24/7</h3>
+        <p class="tiny">Nights, weekends, holidays — covered. You rest. We run. Your pipeline stays full.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section shell" id="how">
+    <div class="kicker">How it works</div>
+    <h2 class="h1" style="font-size:32px;margin-bottom:6px">Simple setup. Serious results.</h2>
+    <div class="panel" style="margin-top:8px">
+      <div class="card">
+        <h3>1) Connect</h3>
+        <p class="tiny">Point your number or forward after a few rings. Integrate your booking calendar (or let us host it).</p>
+        <h3 style="margin-top:12px">2) Configure</h3>
+        <p class="tiny">Operating hours, service areas, pricing rules, dispatch logic — we mirror your real-world flow.</p>
+        <h3 style="margin-top:12px">3) Go Live</h3>
+        <p class="tiny">From the first call, we answer, qualify, and schedule. You’ll feel the calm immediately.</p>
+      </div>
+      <div class="card">
+        <h3>What you’ll feel</h3>
+        <ul class="tiny" style="margin:8px 0 0 18px;line-height:1.7">
+          <li>Less chaos, more control</li>
+          <li>Higher booking rate & better utilization</li>
+          <li>Clear visibility on every lead</li>
+          <li>Time back for real leadership</li>
         </ul>
       </div>
-      <div class="section" style="margin:0">
-        <h2>Fast setup</h2>
-        <p class="sub">Drop-in on your site or route a phone number after-hours only.</p>
-        <ul class="points">
-          <li>Works with your current tools</li>
-          <li>Usage-based voice costs while you scale</li>
-          <li>Switch to full stack any time</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- FEATURES -->
-    <section id="features" class="section">
-      <h2>What we do</h2>
-      <div class="features">
-        <div class="feat">
-          <h3>Answers & Qualifies</h3>
-          <p class="sub">Instant pickup. Captures name, phone, service address, equipment, and issue. Flags emergencies automatically.</p>
-        </div>
-        <div class="feat">
-          <h3>Books Jobs</h3>
-          <p class="sub">Offers slots, confirms, and emails summaries so your techs show up prepared.</p>
-        </div>
-        <div class="feat">
-          <h3>Integrates with your Tools</h3>
-          <p class="sub">Drop-in website widget or phone forwarding. Syncs leads to Airtable/Google/your CRM—no rebuild required.</p>
-        </div>
-    <div class="feat">
-        <h3> Dispatches Directly to Technicians </h3>
-        <p class="sub"> aAuto-sends job SMS/email to the assigned tech with address, customer contact, notes, and time window. </p>
-      </div>
-        <div class="feat">
-        <h3> After-hours and Overflow </h3>
-        <p class="sub"> Covers nights, weekends, or ring-no-answer. Seamless handoff to your team when you want a human to step in. </p>
-           </div>
-        <div class="feat">
-        <h3> Confirmatons and Reminders</h3>
-        <p class="sub"> Texts and emails customers so they show up. Easy rescheduling from a single reply to prevent no-shows. </p> 
-    </section>
-
-    <!-- DEMO (TINY PREVIEW + FULL MODAL) -->
-    <section id="receptionist-demo" class="section">
-      <h2>Live Receptionist</h2>
-      <p class="sub">Speak to the assistant just like a customer would. Put your new recptionist to the test and let us know how u feel about the interacton and we can modify your assisant to your exact preferences</p>
-
-      <div class="demo-grid">
-        <div>
-          <ul class="points">
-            <li>Say: “Book AC maintenance tomorrow.”</li>
-            <li>It collects name/phone/address + issue.</li>
-            <li>It offers time slots or drops the booking form.</li>
-          </ul>
-          <button class="btn primary" id="open-full-demo" style="margin-top:10px">Open full demo</button>
-        </div>
-
-        <div class="sticky">
-          <div class="preview-wrap">
-            <!-- Tiny in-section Vapi preview -->
-            <vapi-widget
-              id="vapiPreview"
-              assistant-id="de52fc61-02a3-499b-b9bf-8c814d377015"
-              public-key="1d2cfdfa-1f72-4bae-9fca-34f0eaa183c3"
-              style="width:100%;height:100%;border:0;display:block"
-            ></vapi-widget>
-          </div>
-          <div class="preview-note">Preview • Click “Open full demo”</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- INTAKE FORM (Airtable embed) -->
-          <section id="intake" class="section">
-  <h2>Quick Intake</h2>
-  <p class="sub">
-    Prefer typing? Use the form below and we’ll confirm by email and text. If you came from an ad, your details will pre-fill automatically.
-  </p>
-
-  <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08)">
-    <!-- We set the src via JS so we can pass UTM/prefill params -->
-    <iframe
-      id="intake-frame"
-      title="TrueDeskAI Intake"
-      src="about:blank"
-      width="100%"
-      height="740"
-      frameborder="0"
-      style="background:transparent;display:block"
-      allowtransparency="true">
-    </iframe>
-  </div>
-</section>
-
-    <!-- PRICING -->
-    <section id="pricing" class="section">
-      <h2>Simple Pricing</h2>
-      <p class="sub">Start usage-based. Upgrade only when it’s paying for itself.</p>
-      <div class="pricing">
-        <div class="plan">
-          <h3>Starter (Usage)</h3>
-          <div class="price">$349/mo</div>
-          <p class="muted">Pay per minute while you validate. Includes the website voice widget + email confirmations.</p>
-        </div>
-        <div class="plan">
-          <h3>Pro</h3>
-          <div class="price">$699/mo</div>
-          <p class="muted">Add after-hours phone routing, CRM pushes, and advanced reporting.</p>
-        </div>
-        <div class="plan">
-          <h3>Full Stack</h3>
-          <div class="price">Custom</div>
-          <p class="muted">Large teams, multi-location routing, and white-glove onboarding.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section id="faq" class="section">
-      <h2>FAQ</h2>
-      <details>
-        <summary>Will it replace our front desk?</summary>
-        <p class="sub">Use it 24/7 or just after-hours/overflow. Most shops start with after-hours and expand as bookings grow.</p>
-      </details>
-      <details>
-        <summary>Where do bookings go?</summary>
-        <p class="sub">Into your calendar + Airtable (or your CRM). You’ll get email confirmations; customers get reminders.</p>
-      </details>
-      <details>
-        <summary>Is my data safe?</summary>
-        <p class="sub">All traffic is encrypted. You control what is stored. Ask us for a data flow diagram if needed.</p>
-      </details>
-      <details>
-        <summary> What happens if the customer wants to speak with a human?</summary>
-        <p class="sub"> There are multiiple ways that people can request human assisantance and we have triggers inplace to ensure that if the customer wants to speak with a human our receptionist will clarify by asking, "would u like to be transferred to *Name*? and if yes they would immediately be transferred.</p>
-      </details>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact" class="section">
-      <h2>Talk to us</h2>
-      <p class="sub">Questions? Click the right-side tab to book a live walkthrough.</p>
-      <button id="open-demo-2" class="btn primary">Book a Demo</button>
-    </section>
-
-    <footer>© <span id="year"></span> TrueDeskAI — AI Receptionist for HVAC</footer>
-  </div>
-
-  <!-- Floating “Book Demo” tab -->
-  <button id="demo-tab" aria-label="Book a Demo"><span>Book Demo</span></button>
-
-  <!-- Airtable booking modal -->
-  <div id="demo-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="book-demo-title">
-    <div class="dialog">
-      <button class="closebtn" id="demo-close" aria-label="Close">Close ✕</button>
-      <iframe id="demo-frame" class="modalframe" src="about:blank" title="Book a Demo"></iframe>
     </div>
-  </div>
+  </section>
 
-  <!-- Full-size Vapi demo modal -->
-  <div id="full-demo-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="full-demo-title">
-    <div class="dialog">
-      <button class="closebtn" id="full-demo-close" aria-label="Close">Close ✕</button>
-      <vapi-widget
-        id="vapiFull"
-        assistant-id="de52fc61-02a3-499b-b9bf-8c814d377015"
-        public-key="1d2cfdfa-1f72-4bae-9fca-34f0eaa183c3"
-        style="width:100%;height:100%;border:0;display:block"
-      ></vapi-widget>
+  <!-- Intake Form -->
+  <section class="section shell" id="intake">
+    <div class="kicker">Get started</div>
+    <h2 class="h1" style="font-size:32px;margin-bottom:6px">Start your free trial — no pressure, only proof.</h2>
+    <p class="sub" style="margin-bottom:12px">Fill this in so we can tailor the receptionist + dispatcher to your exact flow.</p>
+
+    <div class="panel">
+      <div class="embed">
+        <!-- 🔁 REPLACE with your Airtable/Typeform public share URL -->
+        <iframe src="https://airtable.com/embed/shr93n7nIJw09Q3AG?backgroundColor=teal" title="TrueDeskAI Intake Form"></iframe>
+        <div class="hint">This secure form collects only what we need to configure your live demo.</div>
+      </div>
+      <div class="card">
+        <h3>What happens next</h3>
+        <div class="features">
+          <div class="feat"><i></i><div>We review your intake and set up your personalized demo environment.</div></div>
+          <div class="feat"><i></i><div>We connect booking/dispatch (or host it) and run a test call with you.</div></div>
+          <div class="feat"><i></i><div>You experience real calls getting captured and converted — in the wild.</div></div>
+        </div>
+        <a class="btn primary" href="#pricing">See pricing</a>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="section shell" id="pricing">
+    <div class="kicker">Pricing</div>
+    <h2 class="h1" style="font-size:32px;margin-bottom:6px">Built to scale with you — not squeeze you.</h2>
+
+    <div class="pricing" style="margin-top:10px">
+      <div class="card price">
+        <h3>Starter</h3>
+        <div class="tag">Solo / Small Team</div>
+        <div class="money">$399/mo</div>
+        <div class="features">
+          <div class="feat"><i></i><div>24/7 AI receptionist + call capture</div></div>
+          <div class="feat"><i></i><div>Lead logging & basic booking</div></div>
+          <div class="feat"><i></i><div>Email + SMS notifications</div></div>
+        </div>
+        <a class="btn" href="#intake">Start Free Trial</a>
+      </div>
+
+      <div class="card price" style="outline:2px solid rgba(96,209,255,.35)">
+        <h3>Growth</h3>
+        <div class="tag">Most Popular</div>
+        <div class="money">$699/mo</div>
+        <div class="features">
+          <div class="feat"><i></i><div>Smart dispatch + calendar sync</div></div>
+          <div class="feat"><i></i><div>Priority routing & availability rules</div></div>
+          <div class="feat"><i></i><div>CRM export + analytics snapshots</div></div>
+        </div>
+        <a class="btn primary" href="#intake">Start Free Trial</a>
+      </div>
+
+      <div class="card price">
+        <h3>Operator</h3>
+        <div class="tag">Multi-Crew / Multi-Location</div>
+        <div class="money">$1,199/mo</div>
+        <div class="features">
+          <div class="feat"><i></i><div>Advanced dispatch + SLAs</div></div>
+          <div class="feat"><i></i><div>Custom integrations & webhooks</div></div>
+          <div class="feat"><i></i><div>Dedicated support & reviews</div></div>
+        </div>
+        <a class="btn" href="#intake">Talk to Us</a>
+      </div>
+    </div>
+
+    <p class="tiny" style="margin-top:10px;color:var(--muted)">Optional setup fee available for bespoke integrations and migration.</p>
+  </section>
+
+  <!-- Social Proof -->
+  <section class="section shell">
+    <div class="kicker">Proof</div>
+    <h2 class="h1" style="font-size:32px;margin-bottom:6px">The calm is real. The growth is measurable.</h2>
+    <div class="grid-3" style="margin-top:10px">
+      <div class="card"><h3>+32% Bookings</h3><p class="tiny">Average lift in secured jobs in 30 days.</p></div>
+      <div class="card"><h3>0 Missed Calls</h3><p class="tiny">We answer — every hour, every day.</p></div>
+      <div class="card"><h3>Minutes to Live</h3><p class="tiny">Go from intake to answered calls faster than you think.</p></div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section shell">
+    <div class="kicker">What owners say</div>
+    <div class="grid-3">
+      <div class="card"><p class="tiny">“We stopped leaking jobs on nights and weekends. The phone rings — TrueDeskAI books it. Simple.”</p><p class="tiny" style="color:#fff;font-weight:700">— HVAC Owner</p></div>
+      <div class="card"><p class="tiny">“Dispatch used to be chaos. Now it feels… precise. Techs get the right jobs at the right times.”</p><p class="tiny" style="color:#fff;font-weight:700">— Plumbing Lead</p></div>
+      <div class="card"><p class="tiny">“I sleep. The business doesn’t. That peace alone is worth it.”</p><p class="tiny" style="color:#fff;font-weight:700">— Electrical Contractor</p></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section shell" id="faq">
+    <div class="kicker">FAQ</div>
+    <div class="grid-3">
+      <div class="faq-item">
+        <div class="faq-q">How fast can we go live?<span aria-hidden="true">+</span></div>
+        <div class="faq-a">Often same day after intake. We’ll run a quick test call together and turn it on.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do you integrate with our calendar/CRM?<span aria-hidden="true">+</span></div>
+        <div class="faq-a">Yes. We can sync with your calendar or host booking for you. CRM exports/webhooks included on Growth+.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What about complex dispatch rules?<span aria-hidden="true">+</span></div>
+        <div class="faq-a">We respect location, skills, hours, and SLAs. You define the logic — we automate it faithfully.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="section shell">
+    <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+      <div>
+        <div class="kicker">Ready</div>
+        <h3 style="margin:6px 0 4px">Act as if you’re already there. We’ll meet you at that level.</h3>
+        <p class="tiny">Start the trial. Feel the calm. Watch the bookings stack.</p>
+      </div>
+      <div style="display:flex;gap:10px">
+        <a class="btn primary" href="#intake">Start Free Trial</a>
+        <a class="btn" href="#widget">See Live Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="shell foot">
+      <div>© <span id="year"></span> TrueDeskAI. All rights reserved.</div>
+      <div><a href="#faq">FAQ</a> · <a href="#pricing">Pricing</a> · <a href="#intake">Get Started</a></div>
+    </div>
+  </footer>
 
   <script>
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Airtable booking modal (with UTM prefill passthrough)
-    const AIRTABLE_BASE = "https://airtable.com/embed/shryu1Q1G5WXfGEaB?backgroundColor=teal";
-    const bookingModal = document.getElementById('demo-modal');
-    const bookingFrame = document.getElementById('demo-frame');
-    const openers = [document.getElementById('open-demo'), document.getElementById('open-demo-2'), document.getElementById('demo-tab')].filter(Boolean);
-    const closer = document.getElementById('demo-close');
-
-    function buildAirtableUrl(){
-      const url = new URL(AIRTABLE_BASE);
-      const qs = new URLSearchParams(window.location.search);
-      const map = {
-        name:'prefill_Name', email:'prefill_Email', company:'prefill_Company', phone:'prefill_Phone',
-        utm_source:'prefill_utm_source', utm_medium:'prefill_utm_medium', utm_campaign:'prefill_utm_campaign',
-        utm_term:'prefill_utm_term', utm_content:'prefill_utm_content'
-      };
-      Object.keys(map).forEach(k => { const v = qs.get(k); if(v) url.searchParams.set(map[k], v); });
-      return url.toString();
+    // Mobile menu
+    const toggle = document.querySelector('.mobile-toggle');
+    const menu = document.getElementById('mobile-menu');
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        const open = menu.style.display === 'block';
+        menu.style.display = open ? 'none' : 'block';
+        toggle.setAttribute('aria-expanded', String(!open));
+      });
     }
-    function openBooking(){
-      bookingFrame.src = buildAirtableUrl();
-      bookingModal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    }
-    function closeBooking(){
-      bookingModal.style.display = 'none';
-      document.body.style.overflow = '';
-      bookingFrame.src = 'about:blank';
-    }
-    openers.forEach(b => b.addEventListener('click', openBooking));
-    closer.addEventListener('click', closeBooking);
-    bookingModal.addEventListener('click', e => { if(e.target === bookingModal) closeBooking(); });
 
-    // Full-size voice demo modal
-    const fullModal = document.getElementById('full-demo-modal');
-    const openFull = document.getElementById('open-full-demo');
-    const closeFull = document.getElementById('full-demo-close');
-    function openFullDemo(){ fullModal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
-    function closeFullDemo(){ fullModal.style.display = 'none'; document.body.style.overflow = ''; }
-    openFull.addEventListener('click', openFullDemo);
-    closeFull.addEventListener('click', closeFullDemo);
-    fullModal.addEventListener('click', e => { if(e.target === fullModal) closeFullDemo(); });
-
-    // ESC to close any modal
-    document.addEventListener('keydown', e => {
-      if(e.key === 'Escape'){
-        if(bookingModal.style.display === 'flex') closeBooking();
-        if(fullModal.style.display === 'flex') closeFullDemo();
-      }
+    // Simple FAQ toggles
+    document.querySelectorAll('.faq-item').forEach(item => {
+      item.querySelector('.faq-q').addEventListener('click', () => {
+        item.classList.toggle('open');
+      });
     });
   </script>
-
-  <noscript>
-    <div style="position:fixed;bottom:10px;left:10px;background:#111;color:#fff;padding:8px 10px;border-radius:8px">
-      JavaScript is disabled. Email <b>hello@truedeskai.com</b> to book your demo.
-    </div>
-  </noscript>
 </body>
 </html>
